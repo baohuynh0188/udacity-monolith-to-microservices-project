@@ -11,18 +11,16 @@ executors:
       FRONTEND: baohuynh0188/udagram-frontend
       REVERSEPROXY: baohuynh0188/reverseproxy
 
-jobs:
-  install-node:
-    docker:
-      - image: 'docker:stable'
-    steps:
-      - checkout
-      - node/install:
-          node-version: '14.21.3'
-      - run: node --version
-
 workflows:
   jobs:
+    install-node:
+      docker:
+        - image: 'docker:stable'
+      steps:
+        - checkout
+        - node/install:
+            node-version: '14.21.3'
+        - run: node --version
     build:
       working_directory: /udacity-monolith-to-microservices-project
       executor: docker-publisher
