@@ -10,11 +10,11 @@ executors:
       API_USER: baohuynh0188/udagram-api-user
       FRONTEND: baohuynh0188/udagram-frontend
       REVERSEPROXY: baohuynh0188/reverseproxy
+    docker:
+      - image: 'docker:stable'
 
 jobs:
   install-node:
-    docker:
-      - image: 'docker:stable'
     steps:
       - checkout
       - node/install:
