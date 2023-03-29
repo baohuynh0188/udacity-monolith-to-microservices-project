@@ -11,55 +11,54 @@ executors:
       FRONTEND: baohuynh0188/udagram-frontend
       REVERSEPROXY: baohuynh0188/reverseproxy
 
-workflows:
-  jobs:
-    install-node:
-      docker:
-        - image: 'docker:stable'
-      steps:
-        - checkout
-        - node/install:
-            node-version: '14.21.3'
-        - run: node --version
-    build:
-      working_directory: /udacity-monolith-to-microservices-project
-      executor: docker-publisher
-      steps:
-        - checkout
-        # Set up a separate Docker environment to run `docker` commands in
-        - setup_remote_docker
-        - run:
-            name: Install dependencies
-            command: |
-              echo "Install dependencies"
-        - run:
-            name: Build Docker images
-            command: |
-              echo "Build Docker images"
-              docker --version
+jobs:
+  install-node:
+    docker:
+      - image: 'docker:stable'
+    steps:
+      - checkout
+      - node/install:
+          node-version: '14.21.3'
+      - run: node --version
+  build:
+    working_directory: /udacity-monolith-to-microservices-project
+    executor: docker-publisher
+    steps:
+      - checkout
+      # Set up a separate Docker environment to run `docker` commands in
+      - setup_remote_docker
+      - run:
+          name: Install dependencies
+          command: |
+            echo "Install dependencies"
+      - run:
+          name: Build Docker images
+          command: |
+            echo "Build Docker images"
+            docker --version
 
-              echo "Build Docker udagram-api-feed image"
-              docker build -t udagram-api-feed ./udagram-api-feed
-              docker tag udagram-api-feed $API_FEED
+            echo "Build Docker udagram-api-feed image"
+            docker build -t udagram-api-feed ./udagram-api-feed
+            docker tag udagram-api-feed $API_FEED
 
-              echo "Build Docker udagram-api-user image"
-              docker build -t udagram-api-user ./udagram-api-user
-              docker tag udagram-api-user $API_USER
+            echo "Build Docker udagram-api-user image"
+            docker build -t udagram-api-user ./udagram-api-user
+            docker tag udagram-api-user $API_USER
 
-              echo "Build Docker udagram-frontend image"
-              docker build -t udagram-frontend ./udagram-frontend
-              docker tag udagram-frontend $FRONTEND
+            echo "Build Docker udagram-frontend image"
+            docker build -t udagram-frontend ./udagram-frontend
+            docker tag udagram-frontend $FRONTEND
 
-              echo "Build Docker udagram-reverseproxy image"
-              docker build -t udagram-reverseproxy ./udagram-reverseproxy
-              docker tag udagram-reverseproxy $REVERSEPROXY
+            echo "Build Docker udagram-reverseproxy image"
+            docker build -t udagram-reverseproxy ./udagram-reverseproxy
+            docker tag udagram-reverseproxy $REVERSEPROXY
 
-              echo "All images succesfully built"
-        - deploy:
-            name: Push application Docker images
-            command: |
-              docker login -u $DOCKER_HUB_USER_ID -p $DOCKER_HUB_PWD
-              docker push $API_FEED:latest
-              docker push $API_USER:latest
-              docker push $FRONTEND:latest
-              docker push $REVERSEPROXY:latest
+            echo "All images succesfully built"
+      - deploy:
+          name: Push application Docker images
+          command: |
+            docker login -u $DOCKER_HUB_USER_ID -p $DOCKER_HUB_PWD
+            docker push $API_FEED:latest
+            docker push $API_USER:latest
+            docker push $FRONTEND:latest
+            docker push $REVERSEPROXY:latest
