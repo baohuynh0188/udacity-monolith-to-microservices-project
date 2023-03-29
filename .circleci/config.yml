@@ -14,12 +14,6 @@ executors:
       - image: 'docker:stable'
 
 jobs:
-  install-node:
-    steps:
-      - checkout
-      - node/install:
-          node-version: '14.21.3'
-      - run: node --version
   build:
     working_directory: /udacity-monolith-to-microservices-project
     executor: docker-publisher
